@@ -1,6 +1,7 @@
 from pydantic import BaseModel
+from .schemas import BaseSchema
 
-class DepartmentBase(BaseModel):
+class DepartmentBase(BaseSchema):
     name: str
     description: str | None = None
 
