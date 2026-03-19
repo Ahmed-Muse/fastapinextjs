@@ -998,3 +998,24 @@ class BCPriceResponse(BaseSchema):
     discount_percent: Optional[Decimal] = None
     price_valid_from: Optional[date] = None
     price_valid_to: Optional[date] = None
+
+
+
+# Base schema with shared fields
+class UserFeedbackBase(BaseModel):
+    name: str
+    description: Optional[str] = None
+
+# Schema used when creating a new feedback
+class UserFeedbackCreate(UserFeedbackBase):
+    pass
+
+
+class UserFeedbackUpdate(UserFeedbackBase):
+    pass
+# Schema used for reading data from DB (includes id)
+class UserFeedbackOut(UserFeedbackBase):
+    id: int
+
+    class Config:
+        orm_mode = True
