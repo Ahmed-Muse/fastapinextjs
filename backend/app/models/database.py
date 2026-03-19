@@ -13,7 +13,7 @@ from sqlalchemy.types import DECIMAL
 from datetime import datetime
 import uuid
 import enum
-
+from app.models.departments import DepartmentsModel  # Importing DepartmentsModel to ensure it's registered with Base
 
 Base = declarative_base()
 
@@ -715,6 +715,12 @@ class DocumentContextChunkModel(Base):
     )
 
 
+class DepartmentsModel(Base):
+    __tablename__ = "departments"
+
+    id = Column(Integer, primary_key=True, index=True)
+    name = Column(String, nullable=False)
+    description = Column(String, nullable=True)
 # ============================================================================
 # DATABASE INITIALIZATION
 # ============================================================================
@@ -749,4 +755,5 @@ def get_all_models():
         WorkflowLogModel,
         WorkflowTraceModel,
         DocumentContextChunkModel,
+        DepartmentsModel,
     ]

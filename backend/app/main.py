@@ -18,7 +18,7 @@ from app.core.config import settings
 from .routers import (pump_sizing,water_treatment,solar,quotations,health,customers,inquiries,equipment,idayliff,lab_reports,proposals_router,
     documents_router, unified_parser, solarized_treatment, proposal_generation,agentic_workflows, workflow_traces, document_context
 )
-from .routers.api.api import api_router
+from app.api.api import api_router
 
 
 #from .integrations.business_central import get_bc_client
@@ -176,6 +176,7 @@ app.add_middleware(
 )
 
 app.include_router(api_router,prefix="/routers")
+
 
 # ============================================================================
 # INCLUDE ROUTERS WITH PROPER TAGS

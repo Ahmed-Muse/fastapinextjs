@@ -8,7 +8,7 @@ from app.models.departments import DepartmentsModel
 
 router = APIRouter()
 
-@router.get("/", response_model=list[DepartmentOut])
-def list_departments(db: Session = Depends(get_db)):
+@router.get("/feedbacks", response_model=list[DepartmentOut])
+def user_feedbacks(db: Session = Depends(get_db)):
     departments=db.query(DepartmentsModel).all()
     return departments
