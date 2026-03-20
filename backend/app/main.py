@@ -175,7 +175,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-app.include_router(api_router,prefix="/routers/api/v1/endpoints")
+app.include_router(api_router)
 
 
 # ============================================================================
