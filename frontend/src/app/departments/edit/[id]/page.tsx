@@ -1,84 +1,104 @@
 "use client";
 
-import { useState } from "react";
-import { useRouter } from "next/navigation"; // Next.js router for redirection
+import { useEffect, useState } from "react";
+import { useRouter, useParams } from "next/navigation";
 import Link from "next/link";
 import { 
   Building2, 
   ArrowLeft, 
   Save, 
   Loader2, 
-  AlertCircle 
+  AlertCircle,
+  Pencil
 } from "lucide-react";
-import Side_Top_Navbar_Layout from "../../../components/layout/navbars/navbars";
-import { departmentAPI } from "../../api/api";
+import Side_Top_Navbar_Layout from "../../../../components/layout/navbars/navbars";
+import { departmentAPI } from "../../../api/api";
 
-export default function CreateDepartmentPage() {
+export default function EditDepartmentPage() {
   const router = useRouter();
+  const params = useParams(); 
   
-  // 1. Form State
-  const [formData, setFormData] = useState({
-    name: "",
-    slug: "",
-  });
-  
-  // 2. UI State
+  // FIX: Safely extract ID and handle the potential null/undefined
+  const id = params?.id ? Number(params.id) : null;
+
+  const [formData, setFormData] = useState({ name: "", slug: "" });
+  const [loading, setLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  // Helper to auto-generate slug from name (Common UX pattern)
-  const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const name = e.target.value;
-    const slug = name.toLowerCase().replace(/\s+/g, "-").replace(/[^\w-]+/g, "");
-    setFormData({ ...formData, name, slug });
-  };
+  useEffect(() => {
+    // If ID is null or invalid, don't attempt to fetch
+    if (!id || isNaN(id)) {
+      if (!loading) setError("Invalid Department ID.");
+      return;
+    }
 
-  // 3. Submit Logic
+    const fetchDept = async () => {
+      try {
+        setLoading(true);
+        const data = await departmentAPI.get_item(id);
+        setFormData({ name: data.name, slug: data.slug });
+      } catch (err: any) {
+        setError("Could not find this department record.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchDept();
+  }, [id]);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError(null);
+    if (!id) return;
+
     setIsSubmitting(true);
+    setError(null);
 
     try {
-      // Calling our scalable API service
-      await departmentAPI.create_item(formData);
-      
-      // Redirect back to the main list on success
+      await departmentAPI.update_item(id, formData);
       router.push("/departments");
-      router.refresh(); // Tells Next.js to clear cache and show new data
+      router.refresh();
     } catch (err: any) {
-      setError(err.message || "Failed to create department. Please try again.");
+      setError(err.message || "Failed to update department.");
     } finally {
       setIsSubmitting(false);
     }
   };
 
+  // UI for Loading State
+  if (loading) {
+    return (
+      <Side_Top_Navbar_Layout>
+        <div className="flex flex-col items-center justify-center min-h-[60vh] text-slate-400">
+          <Loader2 className="animate-spin mb-4 text-blue-600" size={40} />
+          <p className="text-xs font-bold uppercase tracking-widest">Fetching Record...</p>
+        </div>
+      </Side_Top_Navbar_Layout>
+    );
+  }
+
   return (
     <Side_Top_Navbar_Layout>
       <div className="p-8 max-w-3xl mx-auto">
-        {/* Navigation / Header */}
         <div className="mb-8">
           <Link 
             href="/departments" 
             className="text-slate-500 hover:text-blue-600 flex items-center gap-2 text-sm font-bold transition-colors mb-4"
           >
-            <ArrowLeft size={16} />
-            BACK TO LIST
+            <ArrowLeft size={16} /> BACK TO LIST
           </Link>
           <h1 className="text-2xl font-black text-slate-800 tracking-tight uppercase flex items-center gap-2">
-            <PlusCircle className="text-blue-700" size={24} />
-            Create New Department
+            <Pencil className="text-blue-700" size={24} />
+            Edit Department: <span className="text-blue-600">#{id}</span>
           </h1>
         </div>
 
-        {/* Form Card */}
         <div className="bg-white border border-slate-200 rounded-2xl shadow-sm p-8">
           <form onSubmit={handleSubmit} className="space-y-6">
-            
             {error && (
               <div className="flex items-center gap-3 p-4 bg-red-50 border border-red-100 rounded-xl text-red-700 text-sm font-semibold">
-                <AlertCircle size={18} />
-                {error}
+                <AlertCircle size={18} /> {error}
               </div>
             )}
 
@@ -89,25 +109,22 @@ export default function CreateDepartmentPage() {
               <input
                 required
                 type="text"
-                placeholder="e.g. Engineering, Human Resources"
                 value={formData.name}
-                onChange={handleNameChange}
+                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                 className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none transition-all font-medium text-slate-700"
               />
             </div>
 
             <div>
               <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2">
-                URL Slug (Auto-generated)
+                URL Slug
               </label>
               <input
                 required
                 type="text"
-                placeholder="department-slug"
                 value={formData.slug}
                 onChange={(e) => setFormData({ ...formData, slug: e.target.value })}
-                className="w-full px-4 py-3 bg-slate-100 border border-slate-200 rounded-xl text-slate-500 font-mono text-sm cursor-not-allowed"
-                readOnly
+                className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl font-mono text-sm text-slate-500"
               />
             </div>
 
@@ -115,54 +132,28 @@ export default function CreateDepartmentPage() {
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="flex-1 bg-blue-700 text-white px-6 py-3 rounded-xl font-bold hover:bg-blue-800 transition-all shadow-lg shadow-blue-200 flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed"
+                className="flex-1 bg-blue-700 text-white px-6 py-3 rounded-xl font-bold hover:bg-blue-800 transition-all shadow-lg shadow-blue-200 flex items-center justify-center gap-2 disabled:opacity-50"
               >
                 {isSubmitting ? (
-                  <>
-                    <Loader2 className="animate-spin" size={18} />
-                    SAVING...
-                  </>
+                  <Loader2 className="animate-spin" size={18} />
                 ) : (
-                  <>
-                    <Save size={18} />
-                    SAVE DEPARTMENT
-                  </>
+                  <Save size={18} />
                 )}
+                UPDATE CHANGES
               </button>
               
               <Link href="/departments" className="flex-1">
                 <button 
-                  type="button"
+                  type="button" 
                   className="w-full px-6 py-3 border border-slate-200 text-slate-500 rounded-xl font-bold hover:bg-slate-50 transition-all"
                 >
                   CANCEL
                 </button>
               </Link>
             </div>
-
           </form>
         </div>
       </div>
     </Side_Top_Navbar_Layout>
-  );
-}
-
-// Just a small helper icon for the header
-function PlusCircle({ className, size }: { className?: string, size?: number }) {
-  return (
-    <svg 
-      xmlns="http://www.w3.org/2000/svg" 
-      width={size} 
-      height={size} 
-      viewBox="0 0 24 24" 
-      fill="none" 
-      stroke="currentColor" 
-      strokeWidth="2" 
-      strokeLinecap="round" 
-      strokeLinejoin="round" 
-      className={className}
-    >
-      <circle cx="12" cy="12" r="10"/><path d="M8 12h8"/><path d="M12 8v8"/>
-    </svg>
   );
 }

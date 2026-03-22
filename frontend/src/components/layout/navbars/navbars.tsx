@@ -57,9 +57,7 @@ export default function Side_Top_Navbar_Layout({ children }: { children: React.R
 
           {/* HOME LINK / LOGO SECTION */}
           <Link href="/" className="flex items-center gap-3 select-none group cursor-pointer">
-            <div className="w-8 h-8 bg-blue-700 rounded-md flex items-center justify-center text-white font-bold text-sm shadow-sm group-hover:bg-blue-800 transition-colors">
-              D&S
-            </div>
+         
             <span className="hidden sm:block text-lg font-black text-slate-800 tracking-tight uppercase group-hover:text-blue-700 transition-colors">
              Home
             </span>
@@ -83,10 +81,12 @@ export default function Side_Top_Navbar_Layout({ children }: { children: React.R
                       Departments
                     </Link>
 
-                    
-                    <div className="p-2 text-[11px] hover:bg-slate-50 cursor-pointer rounded font-bold">Branches</div>
+                      <Link href="/feedbacks" className="block p-2 text-[11px] hover:bg-slate-50 cursor-pointer rounded font-bold text-slate-800">
+                      User Feedbacks
+                    </Link>
 
                     
+                  
 
 
 

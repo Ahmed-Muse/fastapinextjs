@@ -4,7 +4,7 @@ from app.db import sessions as deps
 from app.schemas.schemas import UserFeedbackOut, UserFeedbackCreate, UserFeedbackUpdate
 from app.services.user_feedbacks import user_feedback_service
 
-router = APIRouter(prefix="/user_feedbacks", tags=["User Feedbacks"])
+router = APIRouter(prefix="/feedbacks", tags=["User Feedbacks"])
 
 
 @router.get("/", response_model=list[UserFeedbackOut])

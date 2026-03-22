@@ -9,9 +9,9 @@ export default function HomePage() {
   return (
     <Side_Top_Navbar_Layout>
          
-          <button onClick={()=>setAhmed_counter(ahmed_counter+10)}>+</button>
+          <button onClick={()=>setAhmed_counter(ahmed_counter+10)}>add</button>
           <span className="mx-4">{ahmed_counter}</span>
-          <button onClick={()=>setAhmed_counter(ahmed_counter-10)}>-</button>
+          <button onClick={()=>setAhmed_counter(ahmed_counter-10)}>subtract</button>
          
       <div>
       
