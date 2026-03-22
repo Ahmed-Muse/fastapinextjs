@@ -1,8 +1,9 @@
 "use client";
-
+import Link from 'next/link'
 import { useEffect, useState } from "react";
 // Assuming AppLayout is in the components folder two directories up
-import AppLayout from "../../components/AppLayout"; 
+//import AppLayout from "../../components/AppLayout"; 
+import Side_Top_Navbar_Layout from "../../components/layout/navbars/navbars";
 import { departmentAPI, Department } from "../api/api";
 import { 
   Building2, 
@@ -49,7 +50,7 @@ export default function DepartmentsPage() {
   };
 
   return (
-    <AppLayout>
+    <Side_Top_Navbar_Layout>
       <div className="p-8 max-w-7xl mx-auto">
         {/* Page Header */}
         <div className="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4">
@@ -122,6 +123,20 @@ export default function DepartmentsPage() {
                           </button>
                         </div>
                       </td>
+                      <td>
+                        
+       
+          <Link href={`/departments/${dept.name}-${dept.id}-${dept.slug}`}>{dept.id} - Details</Link>
+
+                      </td>
+
+
+
+                      
+     
+       
+  
+
                     </tr>
                   ))}
                 </tbody>
@@ -142,6 +157,8 @@ export default function DepartmentsPage() {
                 </div>
               )}
             </div>
+
+            
           )}
         </div>
         
@@ -154,6 +171,6 @@ export default function DepartmentsPage() {
           </div>
         )}
       </div>
-    </AppLayout>
+    </Side_Top_Navbar_Layout>
   );
 }

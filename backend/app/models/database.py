@@ -720,6 +720,7 @@ class DepartmentsModel(Base):
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String, nullable=False)
     description = Column(String, nullable=True)
+    slug = Column(String, unique=True, index=True, nullable=True,default="this-is-the-default-slug")
 
 
 class UserFeedbacksModel(Base):

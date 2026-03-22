@@ -4,6 +4,7 @@ const API_BASE = "http://127.0.0.1:8000"; // Adjust to your actual backend URL/p
 export interface Department {
   id: number;
   name: string;
+  slug: string;
   // Add other fields defined in your FastAPI DepartmentOut schema here
 }
 

@@ -2,20 +2,9 @@
 
 import { useEffect, useState, useRef } from "react";
 import Link from "next/link";
-import { 
-  ChevronDown, 
-  ChevronRight, 
-  Menu, 
-  User, 
-  Settings, 
-  X,
-  Droplets,
-  Search,
-  ShoppingCart,
-  ClipboardList,
-} from "lucide-react";
+import { ChevronDown, ChevronRight,Menu,User,Settings,X,Droplets,Search,ShoppingCart,ClipboardList} from "lucide-react";
 
-export default function AppLayout({ children }: { children: React.ReactNode }) {
+export default function Side_Top_Navbar_Layout({ children }: { children: React.ReactNode }) {
   // Sidebar State
   const [sidebarOpen, setSidebarOpen] = useState(false);
   
@@ -38,8 +27,10 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
 
   // Toggle Handlers
   const toggleMenu = (menu: string) => {
+    {/*this asks, is the clicked menu the open one? if yes, (null), then close it, otherwise open it*/}
     setOpenMenu(openMenu === menu ? null : menu);
-    setOpenSubMenu(null);
+    setOpenSubMenu(null); {/* Close any open submenus when toggling main menu.... in other words,
+         This is a State Cleanup. By calling setOpenSubMenu(null), you are ensuring that if a user had a sub-menu open (like "Invoices") and then switches to a different main menu, the old sub-menu doesn't stay "stuck" open in the background. It resets the nested state to a clean slate. */}
   };
 
   const toggleSubMenu = (sub: string) => {
@@ -62,6 +53,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
           >
             {sidebarOpen ? <X size={22} /> : <Menu size={22} />}
           </button>
+          {/* condition ? run_if_true : run_if_false...? is the ternary operator */}
 
           {/* HOME LINK / LOGO SECTION */}
           <Link href="/" className="flex items-center gap-3 select-none group cursor-pointer">
@@ -69,7 +61,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
               D&S
             </div>
             <span className="hidden sm:block text-lg font-black text-slate-800 tracking-tight uppercase group-hover:text-blue-700 transition-colors">
-              AI Product Sizing Engine
+             Home
             </span>
           </Link>
         </div>
@@ -90,7 +82,14 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
                     <Link href="/departments" className="block p-2 text-[11px] hover:bg-slate-50 cursor-pointer rounded font-bold text-slate-800">
                       Departments
                     </Link>
+
+                    
                     <div className="p-2 text-[11px] hover:bg-slate-50 cursor-pointer rounded font-bold">Branches</div>
+
+                    
+
+
+
                   </div>
                 )}
              </div>
@@ -145,7 +144,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
                     <div className="max-h-[200px] overflow-y-auto">
                       <div className="p-2 hover:bg-blue-50 cursor-pointer flex items-center gap-2 border-b border-slate-50">
                         <Droplets size={12} className="text-blue-600"/>
-                        <span className="text-[11px] font-bold">Sample Result</span>
+                        <span className="text-[11px] font-bold">Sample Result goes here</span>
                       </div>
                     </div>
                   </div>
@@ -166,16 +165,17 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
         
         {/* SIDEBAR */}
         <aside
-          className={`fixed top-16 left-0 h-[calc(100vh-4rem)] w-64 bg-slate-100 shadow-2xl transform transition-transform duration-300 ease-in-out z-40 border-r border-slate-300 ${
-            sidebarOpen ? "translate-x-0" : "-translate-x-full"
-          }`}
+          className={`fixed top-16 left-0 h-[calc(100vh-4rem)] w-64 bg-slate-100 shadow-2xl 
+            transform transition-transform duration-300 ease-in-out z-40 border-r border-slate-300
+             ${sidebarOpen ? "translate-x-0" : "-translate-x-full"}`}
         >
           <div className="p-4 overflow-y-auto h-full scrollbar-thin">
             <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-6 px-2">Core Operations</p>
             <div className="space-y-2">
               <div>
                 <button
-                  className={`flex items-center justify-between w-full p-3 rounded-xl transition text-sm font-bold ${openMenu === "sales" ? 'bg-white text-blue-700 shadow-sm border border-slate-200' : 'text-slate-600 hover:bg-slate-200'}`}
+                  className={`flex items-center justify-between w-full p-3 rounded-xl transition text-sm font-bold
+                ${openMenu === "sales" ? 'bg-white text-blue-700 shadow-sm border border-slate-200' : 'text-slate-600 hover:bg-slate-200'}`}
                   onClick={() => toggleMenu("sales")}
                 >
                   <div className="flex items-center gap-3">

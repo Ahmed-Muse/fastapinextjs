@@ -4,6 +4,7 @@ from .schemas import BaseSchema
 class DepartmentBase(BaseSchema):
     name: str
     description: str | None = None
+    slug: str | None = None
 
 class DepartmentCreate(DepartmentBase):
     pass
